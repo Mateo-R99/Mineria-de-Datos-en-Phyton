@@ -130,14 +130,6 @@ with col_form:
                     step=1.0,
                     help="Edad del pasajero, entre 0 y 100 años.",
                 )
-                tarifa = st.number_input(
-                    "💰 Tarifa pagada (libras de la época)",
-                    min_value=0.0,
-                    max_value=600.0,
-                    value=32.0,
-                    step=1.0,
-                    help="Valor pagado por el boleto. El promedio histórico es de unas 32 libras.",
-                )
 
             with col2:
                 hermanos_esposos = st.number_input(
@@ -171,13 +163,23 @@ with col_form:
     MAPA_PCLASS = {"Primera clase": 1, "Segunda clase": 2, "Tercera clase": 3}
     MAPA_SEXO = {"Mujer": "female", "Hombre": "male"}
     MAPA_EMBARKED = {"Southampton": "S", "Cherbourg": "C", "Queenstown": "Q"}
+    # Se quitó el campo de tarifa del formulario (era confuso para el usuario:
+    # nadie sabe cuánto costaba un boleto en libras de 1912). En su lugar, se
+    # usa el promedio histórico real de tarifa por clase, calculado sobre el
+    # propio dataset (ver data/titanic.csv): así el modelo -que sí necesita la
+    # variable Fare, es una de sus 7 variables predictoras- sigue recibiendo un
+    # valor realista y representativo de la clase elegida, sin pedírselo al
+    # usuario.
+    FARE_PROMEDIO_POR_CLASE = {
+        "Primera clase": 84.15,
+        "Segunda clase": 20.66,
+        "Tercera clase": 13.68,
+    }
 
     if enviado:
         errores = []
         if not (0 <= edad <= 100):
             errores.append("La edad debe estar entre 0 y 100 años.")
-        if tarifa < 0:
-            errores.append("La tarifa no puede ser negativa.")
         if hermanos_esposos < 0 or padres_hijos < 0:
             errores.append("El número de familiares a bordo no puede ser negativo.")
 
@@ -186,6 +188,7 @@ with col_form:
                 st.error(f"⚠️ {e}")
         else:
             try:
+                tarifa = FARE_PROMEDIO_POR_CLASE[pclass_label]
                 entrada = pd.DataFrame([{
                     "Pclass": MAPA_PCLASS[pclass_label],
                     "Sex": MAPA_SEXO[sexo_label],
@@ -210,6 +213,10 @@ with col_form:
                     render_probability_bars(prob_sobrevive, prob_no_sobrevive)
 
                     with st.expander("🔍 Ver datos enviados al modelo"):
+                        st.caption(
+                            "La tarifa (Fare) no se pide en el formulario: se usa el "
+                            "promedio histórico real de la clase elegida."
+                        )
                         st.dataframe(entrada, hide_index=True, use_container_width=True)
 
             except Exception as e:
@@ -272,7 +279,7 @@ with st.sidebar:
         """
         <div class="sb-fact">🎯 <b>Algoritmo:</b> Random Forest</div>
         <div class="sb-fact">⚙️ <b>Optimización:</b> GridSearchCV (validación cruzada de 5 particiones)</div>
-        <div class="sb-fact">📋 <b>Variables:</b> Clase, Sexo, Edad, SibSp, Parch, Tarifa, Puerto de embarque</div>
+        <div class="sb-fact">📋 <b>Variables:</b> Clase, Sexo, Edad, SibSp, Parch, Tarifa (estimada por clase), Puerto de embarque</div>
         <div class="sb-fact">💾 <b>Dataset:</b> Titanic (891 pasajeros)</div>
         """,
         unsafe_allow_html=True,
