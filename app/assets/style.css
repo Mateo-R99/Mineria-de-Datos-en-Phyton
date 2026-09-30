@@ -267,13 +267,50 @@ div[data-testid="stVerticalBlockBorderWrapper"]:hover {
 }
 
 /* ---- Inputs ---------------------------------------------------------------- */
-div[data-baseweb="select"] > div, input[type="number"] {
+/* Forzamos colores explícitos (no heredados del tema claro/oscuro del sistema)
+   para que las etiquetas y los campos siempre sean legibles, sin importar si
+   el navegador del usuario está en modo oscuro. */
+div.stForm, div.stForm p, div.stForm span, div.stForm label {
+    color: var(--color-text) !important;
+}
+div[data-testid="stWidgetLabel"] > label,
+div[data-testid="stWidgetLabel"] p {
+    color: var(--color-text) !important;
+    font-weight: 600 !important;
+    opacity: 1 !important;
+}
+div[data-baseweb="select"] > div {
+    background-color: #ffffff !important;
+    border: 1px solid var(--color-border) !important;
     border-radius: var(--radius-md) !important;
+    color: var(--color-text) !important;
+}
+div[data-baseweb="select"] span, div[data-baseweb="select"] div {
+    color: var(--color-text) !important;
+}
+input[type="number"] {
+    background-color: #ffffff !important;
+    color: var(--color-text) !important;
+    border: 1px solid var(--color-border) !important;
+    border-radius: var(--radius-md) !important;
+}
+div[data-testid="stNumberInput"] button {
+    background-color: #f1f5f9 !important;
+    color: var(--color-text) !important;
+    border: 1px solid var(--color-border) !important;
 }
 div[data-testid="stNumberInput"] input:focus,
 div[data-baseweb="select"]:focus-within > div {
     border-color: var(--color-accent) !important;
     box-shadow: 0 0 0 2px rgba(8, 145, 178, 0.18) !important;
+}
+/* El menú desplegable de las opciones del selectbox también debe seguir
+   nuestra paleta clara, no la del sistema */
+ul[data-testid="stSelectboxVirtualDropdown"] {
+    background-color: #ffffff !important;
+}
+ul[data-testid="stSelectboxVirtualDropdown"] li {
+    color: var(--color-text) !important;
 }
 
 /* ---- Alertas nativas de Streamlit (success/error/warning/info) ---------- */
