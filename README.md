@@ -30,12 +30,19 @@ Mineria-de-Datos-en-Phyton/
 │   ├── modelos_mineria_datos.ipynb   # Preparación, selección de factores, 6 modelos, CV, GridSearch
 │   └── despliegue_modelo.ipynb       # Prueba del modelo guardado y explicación del despliegue
 ├── app/
-│   └── despliegue.py                 # Aplicación Streamlit
+│   ├── despliegue.py                 # Aplicación Streamlit
+│   ├── components.py                 # Componentes visuales reutilizables (sin lógica de negocio)
+│   └── assets/
+│       └── style.css                 # Estilos personalizados de la interfaz
+├── .streamlit/
+│   └── config.toml                   # Tema visual de la app (modo claro forzado)
 ├── models/
 │   └── modelo_final.pkl              # Pipeline final (preprocesamiento + Random Forest optimizado)
 ├── data/
 │   ├── titanic.csv                   # Dataset original (sin modificar)
 │   └── README.md                     # Descripción de las columnas del dataset
+├── entregables/
+│   └── Proyectos_2026-2_resumen.xlsx # Resumen del proyecto solicitado por la profesora en Teams
 ├── requirements.txt
 └── README.md
 ```
